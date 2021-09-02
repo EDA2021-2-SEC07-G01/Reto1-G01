@@ -82,7 +82,6 @@ def printBestBooks(books):
 def last3elements(catalog):
     artists = catalog['artists']['elements'][-3:]
     artworks = catalog['artworks']['elements'][-3:]
-    print(catalog['artworks']['elements'][0:19])
     last3_artist = ''
     last3_artworks = ''
     for i in range(0 , len(artists)):
