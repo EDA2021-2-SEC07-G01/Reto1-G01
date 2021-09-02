@@ -26,7 +26,6 @@ import controller
 from DISClib.ADT import list as lt
 assert cf
 
-
 """
 La vista se encarga de la interacción con el usuario
 Presenta el menu de opciones y por cada seleccion
@@ -80,6 +79,28 @@ def printBestBooks(books):
     else:
         print('No se encontraron libros')
 
+def last3elements(catalog):
+    artists = catalog['artists']['elements'][-3:]
+    artworks = catalog['artworks']['elements'][-3:]
+    print(catalog['artworks']['elements'][0:19])
+    last3_artist = ''
+    last3_artworks = ''
+    for i in range(0 , len(artists)):
+        artist_value = artists[i]['name']
+        artwork_value = artworks[i]['name']
+        last3_artist += str(artist_value) + '\n'
+        last3_artworks += str(artwork_value) + '\n'
+
+    print("\nLos últimos tres artistas en el archivo son: \n"+str(last3_artist))
+    print("Las últimas tres obras de arte en el archivo son: \n"+str(last3_artworks))
+
+def ArtistSize(catalog):
+    list_artists = catalog['artists']
+    print("\nEl número total de artistas es: "+str(lt.size(list_artists)))
+
+def ArtworkSize(catalog):
+    list_artworks = catalog['artworks']
+    print("El número total de obras de arte es: "+str(lt.size(list_artworks)))
 
 catalog = None
 
@@ -93,7 +114,10 @@ while True:
         print("Cargando información de los archivos ....")
         catalog = initCatalog()
         loadData(catalog)
-        
+        ArtistSize(catalog)
+        ArtworkSize(catalog)
+        last3elements(catalog)
+
     elif int(inputs[0]) == 2:
         pass
     elif int(inputs[0]) == 3:

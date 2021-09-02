@@ -42,11 +42,11 @@ def initCatalog():
     Inicializa el catálogo de obras del MoMA. Crea una lista vacia para guardar
     todos los artistas y las obras de arte. Retorna el catalogo inicializado.
     """
-    catalog = {'artistas': None,
-               'obras': None,}
+    catalog = {'artists': None,
+               'artworks': None,}
 
-    catalog['artistas'] = lt.newList(datastructure="ARRAY_LIST", cmpfunction= compareArtists)
-    catalog['obras'] = lt.newList(datastructure="ARRAY_LIST")
+    catalog['artists'] = lt.newList(datastructure="ARRAY_LIST", cmpfunction= compareArtists)
+    catalog['artworks'] = lt.newList(datastructure="ARRAY_LIST")
 
     return catalog
 
@@ -57,14 +57,14 @@ def addArtist(catalog, artist):
     Adiciona un artista a la lista de artistas
     """
     aux = newArtist(artist['DisplayName'])
-    lt.addLast(catalog['artistas'], aux)
+    lt.addLast(catalog['artists'], aux)
 
 def addArtwork(catalog, artwork):
     """
     Adiciona una obra de arte a la lista de obras de arte
     """
-    t = newArtwork(artwork['Title'], artwork['ObjectID'])
-    lt.addLast(catalog['obras'], t)
+    t = newArtwork(artwork['Title'])
+    lt.addLast(catalog['artworks'], t)
 
 # Funciones para creacion de datos
 
@@ -75,12 +75,12 @@ def newArtist(name):
     name_artist = {'name': name}
     return name_artist
 
-def newArtwork(name, id):
+def newArtwork(name):
     """
     Esta estructura almancena las obras de arte.
     """
-    tag = {'name': name, 'id': id}
-    return tag
+    name_artwork = {'name': name}
+    return name_artwork
 
 # Funciones de consulta
 
