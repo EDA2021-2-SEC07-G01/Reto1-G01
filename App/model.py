@@ -37,12 +37,58 @@ los mismos.
 
 # Construccion de modelos
 
+def initCatalog():
+    """
+    Inicializa el catálogo de obras del MoMA. Crea una lista vacia para guardar
+    todos los artistas y las obras de arte. Retorna el catalogo inicializado.
+    """
+    catalog = {'artistas': None,
+               'obras': None,}
+
+    catalog['artistas'] = lt.newList(datastructure="ARRAY_LIST", cmpfunction= compareArtists)
+    catalog['obras'] = lt.newList(datastructure="ARRAY_LIST")
+
+    return catalog
+
 # Funciones para agregar informacion al catalogo
 
+def addArtist(catalog, artist):
+    """
+    Adiciona un artista a la lista de artistas
+    """
+    aux = newArtist(artist['DisplayName'])
+    lt.addLast(catalog['artistas'], aux)
+
+def addArtwork(catalog, artwork):
+    """
+    Adiciona una obra de arte a la lista de obras de arte
+    """
+    t = newArtwork(artwork['Title'], artwork['ObjectID'])
+    lt.addLast(catalog['obras'], t)
+
 # Funciones para creacion de datos
+
+def newArtist(name):
+    """
+    Esta estructura almancena los tags utilizados para marcar artistas.
+    """
+    name_artist = {'name': name}
+    return name_artist
+
+def newArtwork(name, id):
+    """
+    Esta estructura almancena las obras de arte.
+    """
+    tag = {'name': name, 'id': id}
+    return tag
 
 # Funciones de consulta
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+
+def compareArtists(authorname1, author):
+    if (authorname1.lower() in author['name'].lower()):
+        return 0
+    return -1
 
 # Funciones de ordenamiento

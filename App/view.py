@@ -36,8 +36,50 @@ operación solicitada
 
 def printMenu():
     print("Bienvenido")
-    print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("1 - Cargar información en el catálogo")
+    print("2 - Listar cronológicamente los artistas")
+    print("3 - Listar cronológicamente las adquisiciones")
+    print("4 - Clasificar las obras de un artista por técnica")
+    print("5 - Clasificar la obra por la nacionalidad de sus creadores")
+    print("6 - Transportar obras de un departamento")
+    print("7 - Proponer una nueva exposición en el museo")
+    print("0 - Salir")
+
+def initCatalog():
+    """
+    Inicializa el catalogo de obras de arte
+    """
+    return controller.initCatalog()
+
+
+def loadData(catalog):
+    """
+    Carga las obras de arte en la estructura de datos
+    """
+    controller.loadData(catalog)
+
+
+def printAuthorData(author):
+    if author:
+        print('Autor encontrado: ' + author['name'])
+        print('Promedio: ' + str(author['average_rating']))
+        print('Total de libros: ' + str(lt.size(author['books'])))
+        for book in lt.iterator(author['books']):
+            print('Titulo: ' + book['title'] + '  ISBN: ' + book['isbn'])
+    else:
+        print('No se encontro el autor')
+
+
+def printBestBooks(books):
+    size = lt.size(books)
+    if size:
+        print(' Estos son los mejores libros: ')
+        for book in lt.iterator(books):
+            print('Titulo: ' + book['title'] + '  ISBN: ' +
+                  book['isbn'] + ' Rating: ' + book['average_rating'])
+    else:
+        print('No se encontraron libros')
+
 
 catalog = None
 
@@ -49,10 +91,21 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
-
+        catalog = initCatalog()
+        loadData(catalog)
+        
     elif int(inputs[0]) == 2:
         pass
-
+    elif int(inputs[0]) == 3:
+        pass
+    elif int(inputs[0]) == 4:
+        pass
+    elif int(inputs[0]) == 5:
+        pass
+    elif int(inputs[0]) == 6:
+        pass
+    elif int(inputs[0]) == 7:
+        pass
     else:
         sys.exit(0)
 sys.exit(0)
