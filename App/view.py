@@ -50,34 +50,11 @@ def initCatalog():
     """
     return controller.initCatalog()
 
-
 def loadData(catalog):
     """
     Carga las obras de arte en la estructura de datos
     """
     controller.loadData(catalog)
-
-
-def printAuthorData(author):
-    if author:
-        print('Autor encontrado: ' + author['name'])
-        print('Promedio: ' + str(author['average_rating']))
-        print('Total de libros: ' + str(lt.size(author['books'])))
-        for book in lt.iterator(author['books']):
-            print('Titulo: ' + book['title'] + '  ISBN: ' + book['isbn'])
-    else:
-        print('No se encontro el autor')
-
-
-def printBestBooks(books):
-    size = lt.size(books)
-    if size:
-        print(' Estos son los mejores libros: ')
-        for book in lt.iterator(books):
-            print('Titulo: ' + book['title'] + '  ISBN: ' +
-                  book['isbn'] + ' Rating: ' + book['average_rating'])
-    else:
-        print('No se encontraron libros')
 
 def last3elements(catalog):
     artists = catalog['artists']['elements'][-3:]
