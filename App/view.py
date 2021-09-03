@@ -78,6 +78,10 @@ def ArtworkSize(catalog):
     list_artworks = catalog['artworks']
     print("El número total de obras de arte es: "+str(lt.size(list_artworks)))
 
+def artistDates(catalog, anio_inicial, anio_final):
+    list_artists = controller.artistDates(catalog, anio_inicial, anio_final)
+
+
 catalog = None
 
 """
@@ -95,7 +99,10 @@ while True:
         last3elements(catalog)
 
     elif int(inputs[0]) == 2:
-        pass
+        anio_inicial = input("Ingrese el año inicial: ")
+        anio_final = input("Ingrese el año final: ")
+        artistDates(catalog, anio_inicial, anio_final)
+
     elif int(inputs[0]) == 3:
         pass
     elif int(inputs[0]) == 4:

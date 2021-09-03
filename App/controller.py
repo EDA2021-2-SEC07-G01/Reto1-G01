@@ -71,3 +71,5 @@ def loadArtworks(catalog):
 
 # Funciones de consulta sobre el catálogo
 
+def artistDates(catalog, anio_inicial, anio_final):
+    model.artistDates(catalog, anio_inicial, anio_final)

@@ -56,7 +56,7 @@ def addArtist(catalog, artist):
     """
     Adiciona un artista a la lista de artistas
     """
-    aux = newArtist(artist['DisplayName'])
+    aux = newArtist(artist['DisplayName'], artist['BeginDate'], artist['Nationality'], artist['Gender'])
     lt.addLast(catalog['artists'], aux)
 
 def addArtwork(catalog, artwork):
@@ -68,12 +68,12 @@ def addArtwork(catalog, artwork):
 
 # Funciones para creacion de datos
 
-def newArtist(name):
+def newArtist(name, birth_date, nationality, gender):
     """
     Esta estructura almancena los tags utilizados para marcar artistas.
     """
-    name_artist = {'name': name}
-    return name_artist
+    artist = {'name': name, 'birth_date': birth_date, 'nationality': nationality, 'gender': gender}
+    return artist
 
 def newArtwork(name):
     """
@@ -83,6 +83,8 @@ def newArtwork(name):
     return name_artwork
 
 # Funciones de consulta
+    
+
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
@@ -92,3 +94,6 @@ def compareArtists(authorname1, author):
     return -1
 
 # Funciones de ordenamiento
+
+def artistDates(catalog, anio_inicial, anio_final): # Ordenar cronologicamente por fecha de nacimiento los artistas
+    print("Hola")
