@@ -110,14 +110,17 @@ def cmpArtworkByDateAcquired(artwork1, artwork2): #Formato = año-mes-día
     artwork1: informacion de la primera obra que incluye su valor 'DateAcquired'
     artwork2: informacion de la segunda obra que incluye su valor 'DateAcquired'
     """
-    d1 = artwork1["DateAcquired"].split("-")
-    d1 = [int(date) for date in d1]
-    d2 = artwork2["DateAcquired"].split("-")
-    d2 = [int(date) for date in d2]
-    if (datetime.datetime(d1[0], d1[1], d1[2]) < datetime.datetime(d2[0], d2[1], d2[2])): #debido al formato
-        return True
-    else:
-        return False
+    try:
+        d1 = artwork1["DateAcquired"].split("-")
+        d1 = [int(date) for date in d1]
+        d2 = artwork2["DateAcquired"].split("-")
+        d2 = [int(date) for date in d2]
+        if (datetime.datetime(d1[0], d1[1], d1[2]) < datetime.datetime(d2[0], d2[1], d2[2])): #debido al formato
+            return True
+        else:
+            return False
+    except:
+        pass
 
 # Funciones de ordenamiento
 
