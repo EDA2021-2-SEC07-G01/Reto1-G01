@@ -28,6 +28,7 @@
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import shellsort as sa
+import datetime
 assert cf
 
 """
@@ -37,17 +38,19 @@ los mismos.
 
 # Construccion de modelos
 
-def initCatalog():
+def initCatalog(option):
     """
     Inicializa el catálogo de obras del MoMA. Crea una lista vacia para guardar
     todos los artistas y las obras de arte. Retorna el catalogo inicializado.
     """
     catalog = {'artists': None,
                'artworks': None,}
-
-    catalog['artists'] = lt.newList(datastructure="ARRAY_LIST", cmpfunction= compareArtists)
-    catalog['artworks'] = lt.newList(datastructure="ARRAY_LIST")
-
+    if option == 1:
+        catalog['artists'] = lt.newList(datastructure="ARRAY_LIST", cmpfunction= compareArtists)
+        catalog['artworks'] = lt.newList(datastructure="ARRAY_LIST", cmpfunction= cmpArtworkByDateAcquired)
+    elif option == 2:
+        catalog['artists'] = lt.newList(datastructure="SINGLE_LINKED", cmpfunction= compareArtists)
+        catalog['artworks'] = lt.newList(datastructure="SINGLE_LINKED", cmpfunction= cmpArtworkByDateAcquired)
     return catalog
 
 # Funciones para agregar informacion al catalogo
@@ -63,7 +66,7 @@ def addArtwork(catalog, artwork):
     """
     Adiciona una obra de arte a la lista de obras de arte
     """
-    t = newArtwork(artwork['Title'])
+    t = newArtwork(artwork['Title'], artwork['DateAcquired'])
     lt.addLast(catalog['artworks'], t)
 
 # Funciones para creacion de datos
@@ -75,12 +78,12 @@ def newArtist(name, birth_date, nationality, gender):
     artist = {'name': name, 'birth_date': birth_date, 'nationality': nationality, 'gender': gender}
     return artist
 
-def newArtwork(name):
+def newArtwork(name, date):
     """
     Esta estructura almancena las obras de arte.
     """
-    name_artwork = {'name': name}
-    return name_artwork
+    artwork = {'name': name, 'DateAcquired':date}
+    return artwork
 
 # Funciones de consulta
     
@@ -92,6 +95,22 @@ def compareArtists(authorname1, author):
     if (authorname1.lower() in author['name'].lower()):
         return 0
     return -1
+
+def cmpArtworkByDateAcquired(artwork1, artwork2): #Formato = año-mes-día
+    """
+    Devuelve verdadero (True) si el 'DateAcquired' de artwork1 es menor que el de artwork2
+    Args:
+    artwork1: informacion de la primera obra que incluye su valor 'DateAcquired'
+    artwork2: informacion de la segunda obra que incluye su valor 'DateAcquired'
+    """
+    d1 = artwork1["DateAcquired"].split("-")
+    d1 = [int(date) for date in d1]
+    d2 = artwork2["DateAcquired"].split("-")
+    d2 = [int(date) for date in d2]
+    if (datetime.datetime(d1[0], d1[1], d1[2]) < datetime.datetime(d2[0], d2[1], d2[2])): #debido al formato
+        return True
+    else:
+        return False
 
 # Funciones de ordenamiento
 

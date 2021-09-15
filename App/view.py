@@ -44,11 +44,11 @@ def printMenu():
     print("7 - Proponer una nueva exposición en el museo")
     print("0 - Salir")
 
-def initCatalog():
+def initCatalog(option): # the option is for selecting the datastructure
     """
     Inicializa el catalogo de obras de arte
     """
-    return controller.initCatalog()
+    return controller.initCatalog(option)
 
 def loadData(catalog):
     """
@@ -91,8 +91,10 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
+        print("Seleccione:") 
+        opcion = int(input("El número 1 para usar la representación Array_List o 2 para Single_linked"))
         print("Cargando información de los archivos ....")
-        catalog = initCatalog()
+        catalog = initCatalog(opcion)
         loadData(catalog)
         ArtistSize(catalog)
         ArtworkSize(catalog)
