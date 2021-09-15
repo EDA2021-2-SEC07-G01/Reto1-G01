@@ -25,10 +25,15 @@
  """
 
 
+from DISClib.DataStructures.arraylist import subList
 import config as cf
 from DISClib.ADT import list as lt
-from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import shellsort as shell
+from DISClib.Algorithms.Sorting import insertionsort as insertion
+from DISClib.Algorithms.Sorting import mergesort as merge 
+from DISClib.Algorithms.Sorting import quicksort as quick
 import datetime
+import time
 assert cf
 
 """
@@ -82,11 +87,13 @@ def newArtwork(name, date):
     """
     Esta estructura almancena las obras de arte.
     """
-    artwork = {'name': name, 'DateAcquired':date}
+    artwork = {'Title': name, 'DateAcquired':date}
     return artwork
 
 # Funciones de consulta
-    
+def Generate_sublist(catalog, sample):
+    assert(sample <= lt.size(catalog['artworks'])), "Debe indicar un tamaño menor o igual a la cantidad de total de obras de arte"
+    return lt.subList(catalog['artworks'],1,sample)
 
 
 # Funciones utilizadas para comparar elementos dentro de una lista
@@ -114,5 +121,23 @@ def cmpArtworkByDateAcquired(artwork1, artwork2): #Formato = año-mes-día
 
 # Funciones de ordenamiento
 
-def artistDates(catalog, anio_inicial, anio_final): # Ordenar cronologicamente por fecha de nacimiento los artistas
-    print("Hola")
+def sortArtworks(subList, sorting_method):
+    if sorting_method == 1:
+        start_time = time.process_time()
+        sorted_list = insertion.sort(subList, cmpArtworkByDateAcquired)
+        stop_time = time.process_time()
+    elif sorting_method == 2:
+        start_time = time.process_time()
+        sorted_list = shell.sort(subList, cmpArtworkByDateAcquired)
+        stop_time = time.process_time()
+    elif sorting_method == 3:
+        start_time = time.process_time()        
+        sorted_list = merge.sort(subList, cmpArtworkByDateAcquired)
+        stop_time = time.process_time()
+    elif sorting_method == 4:
+        start_time = time.process_time()        
+        sorted_list = quick.sort(subList, cmpArtworkByDateAcquired)
+        stop_time = time.process_time()
+    elapsed_time = (stop_time - start_time)*1000
+    return elapsed_time, sorted_list
+

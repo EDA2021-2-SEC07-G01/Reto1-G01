@@ -68,8 +68,13 @@ def loadArtworks(catalog):
         model.addArtwork(catalog, artwork)
 
 # Funciones de ordenamiento
+def sortArtworks(sublist, sorting_method):
+    return model.sortArtworks(sublist, sorting_method)
 
 # Funciones de consulta sobre el catálogo
 
 def artistDates(catalog, anio_inicial, anio_final):
-    model.artistDates(catalog, anio_inicial, anio_final)
+    return model.artistDates(catalog, anio_inicial, anio_final)
+
+def Generate_sublist(catalog, sample):
+    return model.Generate_sublist(catalog, sample)
