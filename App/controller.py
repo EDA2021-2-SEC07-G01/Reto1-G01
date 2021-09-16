@@ -62,7 +62,7 @@ def loadArtworks(catalog):
     """
     Carga todas las obras de arte del archivo y las agrega a la lista de obras
     """
-    artworksfile = cf.data_dir + 'MoMA/Artworks-utf8-10pct.csv'
+    artworksfile = cf.data_dir + 'MoMA/Artworks-utf8-small.csv'
     input_file = csv.DictReader(open(artworksfile, encoding='utf-8'))
     for artwork in input_file:
         model.addArtwork(catalog, artwork)
