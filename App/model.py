@@ -95,6 +95,12 @@ def Generate_sublist(catalog, sample):
     assert(sample <= lt.size(catalog['artworks'])), "Debe indicar un tamaño menor o igual a la cantidad de total de obras de arte"
     return lt.subList(catalog['artworks'],1,sample)
 
+def artistDates(catalog, anio_inicial, anio_final):
+    sorted_dict = {}
+    for artist in catalog["artists"]:
+        if artist["birth_date"] >= anio_inicial and artist["birth_date"] <= anio_final:
+            sorted_dict # TODO
+    return True
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
