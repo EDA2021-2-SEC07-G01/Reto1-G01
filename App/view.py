@@ -80,6 +80,9 @@ def artist_technique(catalog, artist_name):
 def artworks_artistnationality(catalog):
     return controller.artworks_artistnationality(catalog)
 
+def artworks_department(catalog, department):
+    return controller.artworks_department(catalog, department)
+
 def printResults(ord_list, sample = 3):
     size = lt.size(ord_list)
     if size > sample:
@@ -128,6 +131,10 @@ while True:
         
     elif int(inputs[0]) == 6:
         department = input("Departamento del museo: ")
+        artworks = artworks_department(catalog, department)
+        print(artworks[0])
+        print(artworks[1])
+
     elif int(inputs[0]) == 7:
         pass
     else:

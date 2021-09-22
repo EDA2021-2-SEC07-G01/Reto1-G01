@@ -72,7 +72,8 @@ def addArtwork(catalog, artwork):
     """
     Adiciona una obra de arte a la lista de obras de arte
     """
-    t = newArtwork(artwork['Title'], artwork['DateAcquired'], artwork['CreditLine'], artwork['ConstituentID'], artwork['Date'], artwork['Medium'], artwork['Dimensions'], artwork['Department'])
+    t = newArtwork(artwork['Title'], artwork['DateAcquired'], artwork['CreditLine'], artwork['ConstituentID'], artwork['Date'], artwork['Medium'], artwork['Dimensions'], artwork['Department'], 
+    artwork['Depth (cm)'], artwork['Height (cm)'], artwork['Length (cm)'], artwork['Weight (kg)'], artwork['Width (cm)'], artwork['Seat Height (cm)'])
     lt.addLast(catalog['artworks'], t)
 
 # Funciones para creacion de datos
@@ -84,11 +85,12 @@ def newArtist(name, birth_date, end_date, nationality, gender, const_id):
     artist = {'name': name, 'birth_date': birth_date, 'end_date': end_date, 'nationality': nationality, 'gender': gender, 'const_id': const_id}
     return artist
 
-def newArtwork(name, date_acqu, credit, artist, date, medium, dimensions, department):
+def newArtwork(name, date_acqu, credit, artist, date, medium, dimensions, department, depth, height, length, weight, width, seat_height):
     """
     Esta estructura almancena las obras de arte.
     """
-    artwork = {'Title': name, 'DateAcquired':date_acqu, 'CreditLine':credit, 'ConstituentID': artist, 'Date': date, 'Medium': medium, 'Dimensions': dimensions, 'Department':department}
+    artwork = {'Title': name, 'DateAcquired':date_acqu, 'CreditLine':credit, 'ConstituentID': artist, 'Date': date, 'Medium': medium, 'Dimensions': dimensions, 'Department':department,
+    'Depth':depth, 'Height': height, 'Length': length, 'Weight': weight, 'Width': width, 'Seat Heigth': seat_height}
     return artwork
 
 # Funciones de consulta
@@ -153,11 +155,47 @@ def artworks_artistnationality(catalog):
     sorted_dicc = sorted(nationality.items(), key=operator.itemgetter(1), reverse=True)
     return sorted_dicc 
 
+def artworks_department(catalog, department):
+    artworks = lt.newList("ARRAY_LIST") # lista de las obras de un departamento dado
+    for artwork in lt.iterator(catalog["artworks"]):
+        if artwork["Department"] == department:
+            artwork["Mayor_precio"] = 48
+            if artwork['Weight'] == "":
+                    artwork['Weight']= "0"
+            precio_peso = (float(artwork['Weight'])*72)
+            if (precio_peso > artwork['Mayor_precio']):
+                artwork['Mayor_precio'] = precio_peso
+            if artwork['Height'] == "" or artwork['Length'] == "": # Not enough information to calculate the price
+                precio_dimension = 0 # It will take into account the 48 default price since it is higher   
+            elif artwork['Depth'] != "" and artwork['Seat Heigth'] != "":
+                precio_dimension = ((float(artwork['Depth'])*(float(artwork['Height'])+ float(artwork['Seat Heigth']))*float(artwork['Length'])))*(72/1000000) # m^3 a cm^3
+            elif  artwork['Depth'] != "":
+                precio_dimension = ((float(artwork['Depth'])*(float(artwork['Height']))*float(artwork['Length'])))*(72/1000000) # m^3 a cm^3
+            elif  artwork['Seat Heigth'] != "":
+                precio_dimension = ((float(artwork['Height']) + float(artwork['Seat Heigth']))*float(artwork['Length']))*(72/10000) # m^3 a cm^3            
+            else:
+                precio_dimension = ((float(artwork['Height']))*float(artwork['Length']))*(72/10000) # m^3 a cm^3            
+            if (precio_dimension > artwork['Mayor_precio']):
+                artwork['Mayor_precio'] = precio_dimension            
+            lt.addLast(artworks, artwork)
+    artworks_price = merge.sort(artworks, compareArtworByPrice)
+    artworks_date = merge.sort(artworks, cmpArtworkByDate)
+    return artworks_price, artworks_date
+
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 def compareArtistsDates(artist1, artist2):
     try:
         if int(artist1["birth_date"]) <= int(artist2["birth_date"]):
+            return True
+        else:
+            return False
+    except:
+        pass
+
+def compareArtworByPrice(artwork1, artwork2):
+    try:
+        if float(artwork1["Mayor_precio"]) >= float(artwork2["Mayor_precio"]):
             return True
         else:
             return False
@@ -182,6 +220,24 @@ def cmpArtworkByDateAcquired(artwork1, artwork2): #Formato = año-mes-día
         d2 = artwork2["DateAcquired"].split("-")
         d2 = [int(date) for date in d2]
         if (datetime.datetime(d1[0], d1[1], d1[2]) < datetime.datetime(d2[0], d2[1], d2[2])): #debido al formato
+            return True
+        else:
+            return False
+    except:
+        pass
+
+
+def cmpArtworkByDate(artwork1, artwork2): #Formato = año-mes-día
+    """
+    Devuelve verdadero (True) si el 'Date' de artwork1 es menor que el de artwork2
+    Args:
+    artwork1: informacion de la primera obra que incluye su valor 'Date'
+    artwork2: informacion de la segunda obra que incluye su valor 'Date'
+    """
+    try:
+        d1 = artwork1["Date"]
+        d2 = artwork2["Date"]
+        if (datetime.datetime(int(d1)) < datetime.datetime(int(d2))): #debido al formato AAAA
             return True
         else:
             return False

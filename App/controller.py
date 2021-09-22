@@ -85,5 +85,8 @@ def artist_technique(catalog, artist_name):
 def artworks_artistnationality(catalog):
     return model.artworks_artistnationality(catalog)
 
+def artworks_department(catalog, department):
+    return model.artworks_department(catalog, department)
+
 def Generate_sublist(catalog, sample):
     return model.Generate_sublist(catalog, sample)
