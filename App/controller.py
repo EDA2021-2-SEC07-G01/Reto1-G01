@@ -82,5 +82,8 @@ def artworksDates(catalog, date_inicial, date_final):
 def artist_technique(catalog, artist_name):
     return model.artist_technique(catalog, artist_name)
 
+def artworks_artistnationality(catalog):
+    return model.artworks_artistnationality(catalog)
+
 def Generate_sublist(catalog, sample):
     return model.Generate_sublist(catalog, sample)

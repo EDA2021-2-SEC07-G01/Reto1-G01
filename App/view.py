@@ -1,4 +1,4 @@
-"""
+﻿"""
  * Copyright 2020, Departamento de sistemas y Computación, Universidad
  * de Los Andes
  *
@@ -77,6 +77,9 @@ def artworksDates(catalog, date_inicial, date_final):
 def artist_technique(catalog, artist_name):
     return controller.artist_technique(catalog, artist_name)
 
+def artworks_artistnationality(catalog):
+    return controller.artworks_artistnationality(catalog)
+
 def printResults(ord_list, sample = 3):
     size = lt.size(ord_list)
     if size > sample:
@@ -120,7 +123,9 @@ while True:
         print(artworks)
 
     elif int(inputs[0]) == 5:
-        pass
+        #ipdb.set_trace()
+        print(artworks_artistnationality(catalog))
+        
     elif int(inputs[0]) == 6:
         department = input("Departamento del museo: ")
     elif int(inputs[0]) == 7:

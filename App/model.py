@@ -32,6 +32,7 @@ from DISClib.Algorithms.Sorting import shellsort as shell
 from DISClib.Algorithms.Sorting import insertionsort as insertion
 from DISClib.Algorithms.Sorting import mergesort as merge 
 from DISClib.Algorithms.Sorting import quicksort as quick
+import operator
 import datetime
 import time
 assert cf
@@ -132,6 +133,25 @@ def artist_technique(catalog, artist_name):
             lt.addLast(artworks, artwork)
     return artworks
 
+def artworks_artistnationality(catalog):
+    id_list = lt.newList(datastructure='ARRAY_LIST')
+    for artwork in lt.iterator(catalog["artworks"]):
+        id_artist = artwork["ConstituentID"][1:-1].split(",")
+        for number in id_artist:
+            lt.addLast(id_list, number)
+    nationality = {}
+    for artist in lt.iterator(catalog["artists"]):
+        for id_artist in lt.iterator(id_list):
+            if id_artist == artist['const_id']:
+                artist_place = artist['nationality']
+                if artist['nationality'] == "":
+                    artist_place= "Nationality unknown"
+                if not artist_place in nationality:
+                    nationality[artist_place] = 1
+                else:
+                    nationality[artist_place] += 1
+    sorted_dicc = sorted(nationality.items(), key=operator.itemgetter(1), reverse=True)
+    return sorted_dicc 
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
