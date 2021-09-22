@@ -90,3 +90,6 @@ def artworks_department(catalog, department):
 
 def Generate_sublist(catalog, sample):
     return model.Generate_sublist(catalog, sample)
+
+def give_artists_byID(catalog, const_ids):
+    return model.give_artists_byID(catalog, const_ids)

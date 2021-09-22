@@ -83,15 +83,45 @@ def artworks_artistnationality(catalog):
 def artworks_department(catalog, department):
     return controller.artworks_department(catalog, department)
 
-def printResults(ord_list, sample = 3):
+# PRINT Functions
+
+def printResultsArtworks(ord_list, sample = 3):
     size = lt.size(ord_list)
     if size > sample:
         print("Las primeras ", sample, "obras de arte ordenadas son: ")
         i = 1
+        j = 0
         while i <= sample:
             artwork = lt.getElement(ord_list, i)
-            print("Title: " + artwork["Title"] + "Date: " + artwork["DateAcquired"])
+            const_ids = artwork["ConstituentID"]
+            artists = controller.give_artists_byID(catalog, const_ids)
+            print("Title: " + artwork["Title"] + ", Date: " + artwork["DateAcquired"] + ", Medio: " + artwork["Medium"] + ", Dimensiones: " + artwork["Dimensions"])
+            print("Los artistas involucrados fueron: " + artists)
             i += 1
+        print("----------------------------------------------------------------------------------")
+        print("Las últimas ", sample, "obras de arte ordenadas son: ")
+        while j < sample:
+            artwork = lt.getElement(ord_list, size - j )
+            print("Title: " + artwork["Title"] + ", Date: " + artwork["DateAcquired"] + ", Medio: " + artwork["Medium"] + ", Dimensiones: " + artwork["Dimensions"])
+            print("Los artistas involucrados fueron: " + artists)
+            j += 1
+
+def printResultsArtists(ord_list, sample = 3):
+    size = lt.size(ord_list)
+    if size > sample:
+        print("Los primeros ", sample, "artistas en el rango dado son: ")
+        i = 1
+        j = 0
+        while i <= sample:
+            artist = lt.getElement(ord_list, i)
+            print("Nombre: " + artist["name"] + ", Nacimiento: " + artist["birth_date"] + ", Fallecimiento: " + artist["end_date"] + ", Nacionalidad: " + artist["nationality"] + ", Género: " + artist["gender"])
+            i += 1
+        print("----------------------------------------------------------------------------------")
+        print("Los últimos ", sample, "artistas en el rango dado son: ")
+        while j < sample:
+            artist = lt.getElement(ord_list, size - j )
+            print("Nombre: " + artist["name"] + ", Nacimiento: " + artist["birth_date"] + ", Fallecimiento: " + artist["end_date"] + ", Nacionalidad: " + artist["nationality"] + ", Género: " + artist["gender"])
+            j += 1
 
 catalog = None
 
@@ -112,18 +142,22 @@ while True:
         anio_inicial = int(input("Ingrese el año inicial: "))
         anio_final = int(input("Ingrese el año final: "))
         organized = artistDates(catalog, anio_inicial, anio_final)
-        print(organized)
+        print("El número total de artistas para el rango dado es: " + str(lt.size(organized)))
+        printResultsArtists(organized, sample=3)
 
     elif int(inputs[0]) == 3:
         date_inicial = input('Ingrese la fecha inicial de adquisición en el formato AAAA-MM-DD: ')
         date_final = input('Ingrese la fecha final de adquisición en el formato AAAA-MM-DD: ')
-        organized = artworksDates(catalog, date_inicial, date_final)
-        print(organized)
+        organized, contador = artworksDates(catalog, date_inicial, date_final)
+        print("El número total de obras en el rango cronológico es: " + str(lt.size(organized)))
+        print("El número total de obras adquiridas por compra es: " + str(contador))
+        printResultsArtworks(organized, sample=3)
 
     elif int(inputs[0]) == 4:
         name_artist = input("Ingrese el nombre del artista para clasificar sus obras por técnica: ")
-        artworks = artist_technique(catalog, name_artist)
-        print(artworks)
+        artworks, techniques = artist_technique(catalog, name_artist)
+        print("El número total de obras para: " + name_artist + "son: " + str(lt.size(artworks)))
+        print("El número total de técnicas utilizadas por " + name_artist + "son: " + str(len(techniques)))
 
     elif int(inputs[0]) == 5:
         #ipdb.set_trace()

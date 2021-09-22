@@ -59,7 +59,7 @@ def initCatalog(option):
         catalog['artworks'] = lt.newList(datastructure="SINGLE_LINKED", cmpfunction= cmpArtworkByDateAcquired)
     return catalog
 
-# Funciones para agregar informacion al catalogo
+# Funciones para AGREGAR informacion al catalogo
 
 def addArtist(catalog, artist):
     """
@@ -93,7 +93,18 @@ def newArtwork(name, date_acqu, credit, artist, date, medium, dimensions, depart
     'Depth':depth, 'Height': height, 'Length': length, 'Weight': weight, 'Width': width, 'Seat Heigth': seat_height}
     return artwork
 
-# Funciones de consulta
+# Funciones de CONSULTA
+
+def give_artists_byID(catalog, const_ids):
+    ids_list = const_ids[1:-1].split(",") # Since split is used, this is a native python list
+    ids_nums = lt.newList("ARRAY_LIST")
+    for i in ids_list: # Turning it into a DISClib list
+        lt.addLast(ids_nums, int(i.strip())) 
+    name_lists = " "
+    for artist in lt.iterator(catalog["artists"]):
+        if int(artist["const_id"].strip()) in ids_nums:
+            name_lists += (artist["name"] + ", ")
+    return name_lists
 
 def artistDates(catalog, anio_inicial, anio_final):
     artist_year_list = lt.newList(datastructure="ARRAY_LIST", cmpfunction= compareArtistsDates)
@@ -109,7 +120,10 @@ def artistDates(catalog, anio_inicial, anio_final):
 
 def artworksDates(catalog, date_inicial, date_final):
     artworks_list = lt.newList(datastructure="ARRAY_LIST", cmpfunction= cmpArtworkByDateAcquired)
+    contador = 0
     for artwork in lt.iterator(catalog["artworks"]):
+        if "purchase" in artwork["CreditLine"].lower():
+            contador += 1
         try:
             artwork_date = artwork["DateAcquired"].split("-")
             initial = date_inicial.split("-")
@@ -119,21 +133,29 @@ def artworksDates(catalog, date_inicial, date_final):
             (datetime.datetime(int(final[0]), int(final[1]), int(final[2])))):
                 lt.addLast(artworks_list, artwork)
         except:
-            pass
+            pass    
     sorted_list = sortArtworksDates(artworks_list)
-    return sorted_list
+    return sorted_list, contador
 
 def artist_technique(catalog, artist_name):
+    const_id = None
     for artist in lt.iterator(catalog["artists"]):
         if artist["name"] == artist_name:
             const_id = artist["const_id"]
-            break
-    #assert(const_id != None, "Debe ingresar el nombre de un artista válido para la base de datos" )
+            break # Se encontró el id del artista buscado
+    assert(const_id != None, "Debe ingresar el nombre de un artista válido para la base de datos" )
     artworks = lt.newList(datastructure='ARRAY_LIST')
+    techniques_contador = {}
+    techniques_artworks = {}
     for artwork in lt.iterator(catalog["artworks"]):
         if const_id in (artwork["ConstituentID"][1:-1].split(",")):
             lt.addLast(artworks, artwork)
-    return artworks
+            if artwork["Medium"] not in techniques_contador:
+                techniques_contador[artwork["Medium"]] = 1 # Se inicializa en 1 la nueva técnica
+                techniques_artworks[artworks["Medium"]] = lt.newList("ARRAY_LIST")
+            else:
+                techniques_contador[artwork["Medium"]] += 1 # Se aumenta en 1 dicha técnica
+    return artworks, techniques_contador, techniques_artworks
 
 def artworks_artistnationality(catalog):
     id_list = lt.newList(datastructure='ARRAY_LIST')
@@ -172,9 +194,9 @@ def artworks_department(catalog, department):
             elif  artwork['Depth'] != "":
                 precio_dimension = ((float(artwork['Depth'])*(float(artwork['Height']))*float(artwork['Length'])))*(72/1000000) # m^3 a cm^3
             elif  artwork['Seat Heigth'] != "":
-                precio_dimension = ((float(artwork['Height']) + float(artwork['Seat Heigth']))*float(artwork['Length']))*(72/10000) # m^3 a cm^3            
+                precio_dimension = ((float(artwork['Height']) + float(artwork['Seat Heigth']))*float(artwork['Length']))*(72/10000) # m^2 a cm^2            
             else:
-                precio_dimension = ((float(artwork['Height']))*float(artwork['Length']))*(72/10000) # m^3 a cm^3            
+                precio_dimension = ((float(artwork['Height']))*float(artwork['Length']))*(72/10000) # m^2 a cm^2            
             if (precio_dimension > artwork['Mayor_precio']):
                 artwork['Mayor_precio'] = precio_dimension            
             lt.addLast(artworks, artwork)
@@ -182,7 +204,7 @@ def artworks_department(catalog, department):
     artworks_date = merge.sort(artworks, cmpArtworkByDate)
     return artworks_price, artworks_date
 
-# Funciones utilizadas para comparar elementos dentro de una lista
+# Funciones de COMPARACIÓN
 
 def compareArtistsDates(artist1, artist2):
     try:
