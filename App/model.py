@@ -64,45 +64,71 @@ def addArtist(catalog, artist):
     """
     Adiciona un artista a la lista de artistas
     """
-    aux = newArtist(artist['DisplayName'], artist['BeginDate'], artist['Nationality'], artist['Gender'])
+    aux = newArtist(artist['DisplayName'], artist['BeginDate'], artist['EndDate'], artist['Nationality'], artist['Gender'])
     lt.addLast(catalog['artists'], aux)
 
 def addArtwork(catalog, artwork):
     """
     Adiciona una obra de arte a la lista de obras de arte
     """
-    t = newArtwork(artwork['Title'], artwork['DateAcquired'])
+    t = newArtwork(artwork['Title'], artwork['DateAcquired'], artwork['CreditLine'], artwork['ConstituentID'], artwork['Date'], artwork['Medium'], artwork['Dimensions'])
     lt.addLast(catalog['artworks'], t)
 
 # Funciones para creacion de datos
 
-def newArtist(name, birth_date, nationality, gender):
+def newArtist(name, birth_date, end_date, nationality, gender):
     """
     Esta estructura almancena los tags utilizados para marcar artistas.
     """
-    artist = {'name': name, 'birth_date': birth_date, 'nationality': nationality, 'gender': gender}
+    artist = {'name': name, 'birth_date': birth_date, 'end_date': end_date, 'nationality': nationality, 'gender': gender}
     return artist
 
-def newArtwork(name, date):
+def newArtwork(name, date_acqu, credit, artist, date, medium, dimensions):
     """
     Esta estructura almancena las obras de arte.
     """
-    artwork = {'Title': name, 'DateAcquired':date}
+    artwork = {'Title': name, 'DateAcquired':date_acqu, 'CreditLine':credit, 'ConstituentID': artist, 'Date': date, 'Medium': medium, 'Dimensions': dimensions}
     return artwork
 
 # Funciones de consulta
-def Generate_sublist(catalog, sample):
-    assert(sample <= lt.size(catalog['artworks'])), "Debe indicar un tamaño menor o igual a la cantidad de total de obras de arte"
-    return lt.subList(catalog['artworks'],1,sample)
 
 def artistDates(catalog, anio_inicial, anio_final):
-    sorted_dict = {}
-    for artist in catalog["artists"]:
-        if artist["birth_date"] >= anio_inicial and artist["birth_date"] <= anio_final:
-            sorted_dict # TODO
-    return True
+    artist_year_list = lt.newList(datastructure="ARRAY_LIST", cmpfunction= compareArtistsDates)
+    for artist in catalog["artists"]["elements"]:
+        try:
+            if int(artist["birth_date"]) >= anio_inicial and int(artist["birth_date"]) <= anio_final:
+                lt.addLast(artist_year_list, artist)
+        except:
+            pass
+    sorted_list = sortArtistDates(artist_year_list)
+    return sorted_list
+
+def artworksDates(catalog, date_inicial, date_final):
+    artworks_list = lt.newList(datastructure="ARRAY_LIST", cmpfunction= cmpArtworkByDateAcquired)
+    for artwork in catalog["artworks"]["elements"]:
+        try:
+            artwork_date = artwork["DateAcquired"].split("-")
+            initial = date_inicial.split("-")
+            final = date_final.split("-")
+            if (datetime.datetime(int(artwork_date[0]), int(artwork_date[1]), int(artwork_date[2])) >= 
+            (datetime.datetime(int(initial[0]), int(initial[1]), int(initial[2])))) and (datetime.datetime(int(artwork_date[0]), int(artwork_date[1]), int(artwork_date[2])) <= 
+            (datetime.datetime(int(final[0]), int(final[1]), int(final[2])))):
+                lt.addLast(artworks_list, artwork)
+        except:
+            pass
+    sorted_list = sortArtworksDates(artworks_list)
+    return sorted_list
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+
+def compareArtistsDates(artist1, artist2):
+    try:
+        if int(artist1["birth_date"]) <= int(artist2["birth_date"]):
+            return True
+        else:
+            return False
+    except:
+        pass
 
 def compareArtists(authorname1, author):
     if (authorname1.lower() in author['name'].lower()):
@@ -130,23 +156,13 @@ def cmpArtworkByDateAcquired(artwork1, artwork2): #Formato = año-mes-día
 
 # Funciones de ordenamiento
 
-def sortArtworks(subList, sorting_method):
-    if sorting_method == 1:
-        start_time = time.process_time()
-        sorted_list = insertion.sort(subList, cmpArtworkByDateAcquired)
-        stop_time = time.process_time()
-    elif sorting_method == 2:
-        start_time = time.process_time()
-        sorted_list = shell.sort(subList, cmpArtworkByDateAcquired)
-        stop_time = time.process_time()
-    elif sorting_method == 3:
-        start_time = time.process_time()        
-        sorted_list = merge.sort(subList, cmpArtworkByDateAcquired)
-        stop_time = time.process_time()
-    elif sorting_method == 4:
-        start_time = time.process_time()        
-        sorted_list = quick.sort(subList, cmpArtworkByDateAcquired)
-        stop_time = time.process_time()
-    elapsed_time = (stop_time - start_time)*1000
-    return elapsed_time, sorted_list
+def sortArtistDates(list):
+    return merge.sort(list, compareArtistsDates)
 
+def sortArtworksDates(list):
+    return merge.sort(list, cmpArtworkByDateAcquired)
+
+# ---
+def Generate_sublist(catalog, sample):
+    assert(sample <= lt.size(catalog['artworks'])), "Debe indicar un tamaño menor o igual a la cantidad de total de obras de arte"
+    return lt.subList(catalog['artworks'],1,sample)

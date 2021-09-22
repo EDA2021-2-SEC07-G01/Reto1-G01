@@ -59,20 +59,6 @@ def loadData(catalog):
     """
     controller.loadData(catalog)
 
-def last3elements(catalog):
-    artists = catalog['artists']['elements'][-3:]
-    artworks = catalog['artworks']['elements'][-3:]
-    last3_artist = ''
-    last3_artworks = ''
-    for i in range(0 , lt.size(artists)):
-        artist_value = artists[i]['name']
-        artwork_value = artworks[i]['Title']
-        last3_artist += str(artist_value) + '\n'
-        last3_artworks += str(artwork_value) + '\n'
-
-    print("\nLos últimos tres artistas en el archivo son: \n"+str(last3_artist))
-    print("Las últimas tres obras de arte en el archivo son: \n"+str(last3_artworks))
-
 def ArtistSize(catalog):
     list_artists = catalog['artists']
     print("\nEl número total de artistas es: "+str(lt.size(list_artists)))
@@ -82,9 +68,12 @@ def ArtworkSize(catalog):
     print("El número total de obras de arte es: "+str(lt.size(list_artworks)))
 
 def artistDates(catalog, anio_inicial, anio_final):
-    list_artists = controller.artistDates(catalog, anio_inicial, anio_final)
+    return controller.artistDates(catalog, anio_inicial, anio_final)
 
-def printSortResults(ord_list, sample = 12):
+def artworksDates(catalog, date_inicial, date_final):
+    return controller.artworksDates(catalog, date_inicial, date_final)
+
+def printResults(ord_list, sample = 3):
     size = lt.size(ord_list)
     if size > sample:
         print("Las primeras ", sample, "obras de arte ordenadas son: ")
@@ -113,17 +102,16 @@ while True:
         #last3elements(catalog)
 
     elif int(inputs[0]) == 2:
-        anio_inicial = input("Ingrese el año inicial: ")
-        anio_final = input("Ingrese el año final: ")
-        artistDates(catalog, anio_inicial, anio_final)
+        anio_inicial = int(input("Ingrese el año inicial: "))
+        anio_final = int(input("Ingrese el año final: "))
+        organized = artistDates(catalog, anio_inicial, anio_final)
+        print(organized)
 
     elif int(inputs[0]) == 3:
-        muestra = int(input("Elija el tamaño de la muestra: "))
-        sublist = controller.Generate_sublist(catalog, muestra)
-        sort_method = int(input("Seleccione un número para el algoritmo de ordenamiento: 1-Insertion, 2-Shell, 3-Merge, 4-Quick Sort \n"))
-        artworks = controller.sortArtworks(sublist, int(sort_method)) # lista con tamaño de la muestra
-        print("El tiempo de ordenamiento en milisegundos fue de: " + str(artworks[0]) + " para una muestra de tamaño " + str(muestra))
-        printSortResults(artworks[1])
+        date_inicial = input('Ingrese la fecha inicial de adquisición en el formato AAAA-MM-DD: ')
+        date_final = input('Ingrese la fecha final de adquisición en el formato AAAA-MM-DD: ')
+        organized = artworksDates(catalog, date_inicial, date_final)
+        print(organized)
 
     elif int(inputs[0]) == 4:
         pass

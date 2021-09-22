@@ -76,5 +76,8 @@ def sortArtworks(sublist, sorting_method):
 def artistDates(catalog, anio_inicial, anio_final):
     return model.artistDates(catalog, anio_inicial, anio_final)
 
+def artworksDates(catalog, date_inicial, date_final):
+    return model.artworksDates(catalog, date_inicial, date_final)
+
 def Generate_sublist(catalog, sample):
     return model.Generate_sublist(catalog, sample)
