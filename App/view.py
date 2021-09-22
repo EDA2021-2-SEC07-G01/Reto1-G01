@@ -1,4 +1,4 @@
-﻿"""
+"""
  * Copyright 2020, Departamento de sistemas y Computación, Universidad
  * de Los Andes
  *
@@ -23,6 +23,7 @@
 import config as cf
 import sys
 import controller
+import ipdb
 from DISClib.ADT import list as lt
 assert cf
 
@@ -73,6 +74,9 @@ def artistDates(catalog, anio_inicial, anio_final):
 def artworksDates(catalog, date_inicial, date_final):
     return controller.artworksDates(catalog, date_inicial, date_final)
 
+def artist_technique(catalog, artist_name):
+    return controller.artist_technique(catalog, artist_name)
+
 def printResults(ord_list, sample = 3):
     size = lt.size(ord_list)
     if size > sample:
@@ -99,7 +103,6 @@ while True:
         loadData(catalog)
         ArtistSize(catalog)
         ArtworkSize(catalog)
-        #last3elements(catalog)
 
     elif int(inputs[0]) == 2:
         anio_inicial = int(input("Ingrese el año inicial: "))
@@ -114,7 +117,11 @@ while True:
         print(organized)
 
     elif int(inputs[0]) == 4:
-        pass
+        name_artist = input("Ingrese el nombre del artista para clasificar sus obras por técnica: ")
+        ipdb.set_trace()
+        artworks = artist_technique(catalog, name_artist)
+        print(artworks)
+
     elif int(inputs[0]) == 5:
         pass
     elif int(inputs[0]) == 6:

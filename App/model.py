@@ -64,7 +64,7 @@ def addArtist(catalog, artist):
     """
     Adiciona un artista a la lista de artistas
     """
-    aux = newArtist(artist['DisplayName'], artist['BeginDate'], artist['EndDate'], artist['Nationality'], artist['Gender'])
+    aux = newArtist(artist['DisplayName'], artist['BeginDate'], artist['EndDate'], artist['Nationality'], artist['Gender'], artist['ConstituentID'])
     lt.addLast(catalog['artists'], aux)
 
 def addArtwork(catalog, artwork):
@@ -76,11 +76,11 @@ def addArtwork(catalog, artwork):
 
 # Funciones para creacion de datos
 
-def newArtist(name, birth_date, end_date, nationality, gender):
+def newArtist(name, birth_date, end_date, nationality, gender, const_id):
     """
     Esta estructura almancena los tags utilizados para marcar artistas.
     """
-    artist = {'name': name, 'birth_date': birth_date, 'end_date': end_date, 'nationality': nationality, 'gender': gender}
+    artist = {'name': name, 'birth_date': birth_date, 'end_date': end_date, 'nationality': nationality, 'gender': gender, 'const_id': const_id}
     return artist
 
 def newArtwork(name, date_acqu, credit, artist, date, medium, dimensions):
@@ -118,6 +118,19 @@ def artworksDates(catalog, date_inicial, date_final):
             pass
     sorted_list = sortArtworksDates(artworks_list)
     return sorted_list
+
+def artist_technique(catalog, artist_name):
+    for artist in catalog["artists"]["elements"]:
+        if artist["name"] == artist_name:
+            const_id = artist["const_id"]
+            break
+    assert(const_id != None, "Debe ingresar el nombre de un artista válido para la base de datos" )
+    artworks = lt.newList(datastructure='ARRAY_LIST')
+    for artwork in catalog["artworks"]["elements"]:
+        if const_id in (artwork["ConstituentID"][1:-1].split(",")):
+            lt.addLast(artworks, artwork)
+    return artworks
+
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 

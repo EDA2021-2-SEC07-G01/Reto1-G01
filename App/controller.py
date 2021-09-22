@@ -79,5 +79,8 @@ def artistDates(catalog, anio_inicial, anio_final):
 def artworksDates(catalog, date_inicial, date_final):
     return model.artworksDates(catalog, date_inicial, date_final)
 
+def artist_technique(catalog, artist_name):
+    return model.artist_technique(catalog, artist_name)
+
 def Generate_sublist(catalog, sample):
     return model.Generate_sublist(catalog, sample)
