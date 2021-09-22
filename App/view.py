@@ -96,10 +96,8 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
-        print("Seleccione:") 
-        opcion = int(input("El número 1 para usar la representación Array_List o 2 para Single_linked: \n"))
         print("Cargando información de los archivos ....")
-        catalog = initCatalog(opcion)
+        catalog = initCatalog(option=1)
         loadData(catalog)
         ArtistSize(catalog)
         ArtworkSize(catalog)
@@ -118,14 +116,13 @@ while True:
 
     elif int(inputs[0]) == 4:
         name_artist = input("Ingrese el nombre del artista para clasificar sus obras por técnica: ")
-        ipdb.set_trace()
         artworks = artist_technique(catalog, name_artist)
         print(artworks)
 
     elif int(inputs[0]) == 5:
         pass
     elif int(inputs[0]) == 6:
-        pass
+        department = input("Departamento del museo: ")
     elif int(inputs[0]) == 7:
         pass
     else:

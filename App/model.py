@@ -71,7 +71,7 @@ def addArtwork(catalog, artwork):
     """
     Adiciona una obra de arte a la lista de obras de arte
     """
-    t = newArtwork(artwork['Title'], artwork['DateAcquired'], artwork['CreditLine'], artwork['ConstituentID'], artwork['Date'], artwork['Medium'], artwork['Dimensions'])
+    t = newArtwork(artwork['Title'], artwork['DateAcquired'], artwork['CreditLine'], artwork['ConstituentID'], artwork['Date'], artwork['Medium'], artwork['Dimensions'], artwork['Department'])
     lt.addLast(catalog['artworks'], t)
 
 # Funciones para creacion de datos
@@ -83,18 +83,19 @@ def newArtist(name, birth_date, end_date, nationality, gender, const_id):
     artist = {'name': name, 'birth_date': birth_date, 'end_date': end_date, 'nationality': nationality, 'gender': gender, 'const_id': const_id}
     return artist
 
-def newArtwork(name, date_acqu, credit, artist, date, medium, dimensions):
+def newArtwork(name, date_acqu, credit, artist, date, medium, dimensions, department):
     """
     Esta estructura almancena las obras de arte.
     """
-    artwork = {'Title': name, 'DateAcquired':date_acqu, 'CreditLine':credit, 'ConstituentID': artist, 'Date': date, 'Medium': medium, 'Dimensions': dimensions}
+    artwork = {'Title': name, 'DateAcquired':date_acqu, 'CreditLine':credit, 'ConstituentID': artist, 'Date': date, 'Medium': medium, 'Dimensions': dimensions, 'Department':department}
     return artwork
 
 # Funciones de consulta
 
 def artistDates(catalog, anio_inicial, anio_final):
     artist_year_list = lt.newList(datastructure="ARRAY_LIST", cmpfunction= compareArtistsDates)
-    for artist in catalog["artists"]["elements"]:
+    #for artist in lt.iterator(catalog["artists"]["elements"]):
+    for artist in lt.iterator(catalog["artists"]):
         try:
             if int(artist["birth_date"]) >= anio_inicial and int(artist["birth_date"]) <= anio_final:
                 lt.addLast(artist_year_list, artist)
@@ -105,7 +106,7 @@ def artistDates(catalog, anio_inicial, anio_final):
 
 def artworksDates(catalog, date_inicial, date_final):
     artworks_list = lt.newList(datastructure="ARRAY_LIST", cmpfunction= cmpArtworkByDateAcquired)
-    for artwork in catalog["artworks"]["elements"]:
+    for artwork in lt.iterator(catalog["artworks"]):
         try:
             artwork_date = artwork["DateAcquired"].split("-")
             initial = date_inicial.split("-")
@@ -120,13 +121,13 @@ def artworksDates(catalog, date_inicial, date_final):
     return sorted_list
 
 def artist_technique(catalog, artist_name):
-    for artist in catalog["artists"]["elements"]:
+    for artist in lt.iterator(catalog["artists"]):
         if artist["name"] == artist_name:
             const_id = artist["const_id"]
             break
-    assert(const_id != None, "Debe ingresar el nombre de un artista válido para la base de datos" )
+    #assert(const_id != None, "Debe ingresar el nombre de un artista válido para la base de datos" )
     artworks = lt.newList(datastructure='ARRAY_LIST')
-    for artwork in catalog["artworks"]["elements"]:
+    for artwork in lt.iterator(catalog["artworks"]):
         if const_id in (artwork["ConstituentID"][1:-1].split(",")):
             lt.addLast(artworks, artwork)
     return artworks
