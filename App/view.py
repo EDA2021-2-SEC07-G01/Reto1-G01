@@ -90,20 +90,22 @@ def printResultsArtworks(ord_list, sample = 3):
     if size > sample:
         print("Las primeras ", sample, "obras de arte ordenadas son: ")
         i = 1
-        j = 0
+        j = -2
         while i <= sample:
             artwork = lt.getElement(ord_list, i)
             const_ids = artwork["ConstituentID"]
             artists = controller.give_artists_byID(catalog, const_ids)
             print("Title: " + artwork["Title"] + ", Date: " + artwork["DateAcquired"] + ", Medio: " + artwork["Medium"] + ", Dimensiones: " + artwork["Dimensions"])
-            print("Los artistas involucrados fueron: " + artists)
+            print("Los artistas involucrados fueron: ", (artists['elements']))
             i += 1
         print("----------------------------------------------------------------------------------")
         print("Las últimas ", sample, "obras de arte ordenadas son: ")
-        while j < sample:
-            artwork = lt.getElement(ord_list, size - j )
+        while j+2 < sample:
+            artwork = lt.getElement(ord_list, size + j )
+            const_ids = artwork["ConstituentID"]
+            artists = controller.give_artists_byID(catalog, const_ids)
             print("Title: " + artwork["Title"] + ", Date: " + artwork["DateAcquired"] + ", Medio: " + artwork["Medium"] + ", Dimensiones: " + artwork["Dimensions"])
-            print("Los artistas involucrados fueron: " + artists)
+            print("Los artistas involucrados fueron: ", (artists['elements']))
             j += 1
 
 def printResultsArtists(ord_list, sample = 3):
@@ -155,8 +157,8 @@ while True:
 
     elif int(inputs[0]) == 4:
         name_artist = input("Ingrese el nombre del artista para clasificar sus obras por técnica: ")
-        artworks, techniques = artist_technique(catalog, name_artist)
-        print("El número total de obras para: " + name_artist + "son: " + str(lt.size(artworks)))
+        contador, techniques = artist_technique(catalog, name_artist)
+        print("El número total de obras para: " + name_artist + "son: " + str(contador))
         print("El número total de técnicas utilizadas por " + name_artist + "son: " + str(len(techniques)))
 
     elif int(inputs[0]) == 5:

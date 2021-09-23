@@ -99,11 +99,11 @@ def give_artists_byID(catalog, const_ids):
     ids_list = const_ids[1:-1].split(",") # Since split is used, this is a native python list
     ids_nums = lt.newList("ARRAY_LIST")
     for i in ids_list: # Turning it into a DISClib list
-        lt.addLast(ids_nums, int(i.strip())) 
-    name_lists = " "
+        lt.addLast(ids_nums, i.strip()) 
+    name_lists = lt.newList("ARRAY_LIST")
     for artist in lt.iterator(catalog["artists"]):
-        if int(artist["const_id"].strip()) in ids_nums:
-            name_lists += (artist["name"] + ", ")
+        if artist["const_id"].strip() in lt.iterator(ids_nums):
+            lt.addLast(name_lists, artist['name'])
     return name_lists
 
 def artistDates(catalog, anio_inicial, anio_final):
@@ -122,8 +122,6 @@ def artworksDates(catalog, date_inicial, date_final):
     artworks_list = lt.newList(datastructure="ARRAY_LIST", cmpfunction= cmpArtworkByDateAcquired)
     contador = 0
     for artwork in lt.iterator(catalog["artworks"]):
-        if "purchase" in artwork["CreditLine"].lower():
-            contador += 1
         try:
             artwork_date = artwork["DateAcquired"].split("-")
             initial = date_inicial.split("-")
@@ -131,6 +129,8 @@ def artworksDates(catalog, date_inicial, date_final):
             if (datetime.datetime(int(artwork_date[0]), int(artwork_date[1]), int(artwork_date[2])) >= 
             (datetime.datetime(int(initial[0]), int(initial[1]), int(initial[2])))) and (datetime.datetime(int(artwork_date[0]), int(artwork_date[1]), int(artwork_date[2])) <= 
             (datetime.datetime(int(final[0]), int(final[1]), int(final[2])))):
+                if "purchase" in artwork["CreditLine"].lower():
+                    contador += 1
                 lt.addLast(artworks_list, artwork)
         except:
             pass    
@@ -138,24 +138,24 @@ def artworksDates(catalog, date_inicial, date_final):
     return sorted_list, contador
 
 def artist_technique(catalog, artist_name):
-    const_id = None
     for artist in lt.iterator(catalog["artists"]):
-        if artist["name"] == artist_name:
+        if artist["name"].lower() == artist_name.lower():
             const_id = artist["const_id"]
             break # Se encontró el id del artista buscado
-    assert(const_id != None, "Debe ingresar el nombre de un artista válido para la base de datos" )
-    artworks = lt.newList(datastructure='ARRAY_LIST')
-    techniques_contador = {}
+    contador = 0
     techniques_artworks = {}
     for artwork in lt.iterator(catalog["artworks"]):
         if const_id in (artwork["ConstituentID"][1:-1].split(",")):
-            lt.addLast(artworks, artwork)
-            if artwork["Medium"] not in techniques_contador:
-                techniques_contador[artwork["Medium"]] = 1 # Se inicializa en 1 la nueva técnica
-                techniques_artworks[artworks["Medium"]] = lt.newList("ARRAY_LIST")
+            contador += 1
+            if artwork["Medium"] not in techniques_artworks:
+                artworks_list = lt.newList("ARRAY_LIST")
+                lt.addLast(artworks_list, artwork) 
+                techniques_artworks[artwork["Medium"]] = artworks_list
             else:
-                techniques_contador[artwork["Medium"]] += 1 # Se aumenta en 1 dicha técnica
-    return artworks, techniques_contador, techniques_artworks
+                artworks_list = techniques_artworks[artwork["Medium"]]
+                lt.addLast(artworks_list, artwork)
+    print(techniques_artworks)
+    return contador, techniques_artworks
 
 def artworks_artistnationality(catalog):
     id_list = lt.newList(datastructure='ARRAY_LIST')
