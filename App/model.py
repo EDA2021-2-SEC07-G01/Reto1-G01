@@ -139,7 +139,7 @@ def artworksDates(catalog, date_inicial, date_final):
 
 def artist_technique(catalog, artist_name):
     for artist in lt.iterator(catalog["artists"]):
-        if artist["name"].lower() == artist_name.lower():
+        if artist["name"].strip().lower() == artist_name.lower():
             const_id = artist["const_id"]
             break # Se encontró el id del artista buscado
     contador = 0
@@ -153,9 +153,15 @@ def artist_technique(catalog, artist_name):
                 techniques_artworks[artwork["Medium"]] = artworks_list
             else:
                 artworks_list = techniques_artworks[artwork["Medium"]]
-                lt.addLast(artworks_list, artwork)
-    print(techniques_artworks)
+                lt.addLast(artworks_list, artwork) 
     return contador, techniques_artworks
+
+def most_used_technique(techniques_artworks):
+    most_used_tech = list(techniques_artworks.keys())[0]
+    for tech in techniques_artworks.keys():
+        if(lt.size(techniques_artworks[tech]) > lt.size(techniques_artworks[most_used_tech])):
+            most_used_tech = tech
+    return most_used_tech
 
 def artworks_artistnationality(catalog):
     id_list = lt.newList(datastructure='ARRAY_LIST')
@@ -218,8 +224,6 @@ def artworks_department(catalog, department):
     artworks_price = merge.sort(artworks, compareArtworByPrice)
     artworks_date = merge.sort(artworks, cmpArtworkByDate)
     return artworks_price, artworks_date
-
-
 
 # Funciones de COMPARACIÓN
 

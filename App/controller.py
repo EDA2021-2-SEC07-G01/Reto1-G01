@@ -96,3 +96,6 @@ def Generate_sublist(catalog, sample):
 
 def give_artists_byID(catalog, const_ids):
     return model.give_artists_byID(catalog, const_ids)
+
+def most_used_technique(techniques_artworks):
+    return model.most_used_technique(techniques_artworks)

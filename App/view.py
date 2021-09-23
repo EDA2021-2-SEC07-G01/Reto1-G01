@@ -83,6 +83,9 @@ def artworks_artistnationality(catalog):
 def artworks_department(catalog, department):
     return controller.artworks_department(catalog, department)
 
+def most_used_technique(techniques_artworks):
+    return controller.most_used_technique(techniques_artworks)
+
 # PRINT Functions
 
 def printResultsArtworks(ord_list, sample = 3):
@@ -155,6 +158,31 @@ def printResultsNationalityInfo(names, artworks_list, sample=3):
             print("Título: "+ artworks['Title']+", Artistas: " + lt.getElement(names, j)+", Fecha: "+ artworks['Date']+", Medio: "+artworks['Medium']+ ", Dimensiones: "+artworks['Dimensions'])
             j += 1
 
+def print_artworks_technique(techniques_dicc, most_used_tech):
+    artworks = techniques_dicc[most_used_tech]
+    for artwork in lt.iterator(artworks):
+        print("Título: " + artwork["Title"] + ", Fecha: " + artwork["Date"] + ", Medio: " + artwork["Medium"] + ", Dimensiones: " + artwork["Dimensions"])
+
+def print5expensive(artworks_price, sample=5):
+    size = lt.size(artworks_price)
+    if size > sample:
+        print("Las " + str(sample) + " obras más caras son: ")
+        i = 1
+        while i <= sample:
+            artwork = lt.getElement(artworks_price, i)
+            print("Title: " + artwork["Title"] + ", Date: " + artwork["Date"] + ", Medio: " + artwork["Medium"] + ", Dimensiones: " + artwork["Dimensions"])
+            i += 1
+
+def print5oldest(artworks_date, sample=5):
+    size = lt.size(artworks_date)
+    if size > sample:
+        print("Las " + str(sample) + " obras más antiguas son: ")
+        i = 0
+        while i < sample:
+            artwork = lt.getElement(artworks_date, size - i)
+            print("Title: " + artwork["Title"] + ", Date: " + artwork["Date"] + ", Medio: " + artwork["Medium"] + ", Dimensiones: " + artwork["Dimensions"])
+            i += 1
+
 catalog = None
 
 """
@@ -190,6 +218,9 @@ while True:
         contador, techniques = artist_technique(catalog, name_artist)
         print("El número total de obras para: " + name_artist + "son: " + str(contador))
         print("El número total de técnicas utilizadas por " + name_artist + "son: " + str(len(techniques)))
+        most_used_tech = most_used_technique(techniques)
+        print("La técnica más utilizada por " + name_artist + "es: " + most_used_tech)
+        print_artworks_technique(techniques, most_used_tech)
 
     elif int(inputs[0]) == 5:
         list = artworks_artistnationality(catalog)
@@ -199,12 +230,12 @@ while True:
         
     elif int(inputs[0]) == 6:
         department = input("Departamento del museo: ")
-        artworks = artworks_department(catalog, department)
-        print(artworks[0])
-        print(artworks[1])
+        artworks_price, artworks_date = artworks_department(catalog, department)
+        print("El total de obras a transportar es: " + str(lt.size(artworks_price)))
+        print5expensive(artworks_price)
+        print("----------------------------------------------------------------------------------")
+        print5oldest(artworks_date)
 
-    elif int(inputs[0]) == 7:
-        pass
     else:
         sys.exit(0)
 sys.exit(0)
