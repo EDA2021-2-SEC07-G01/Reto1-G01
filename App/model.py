@@ -162,11 +162,11 @@ def artworks_artistnationality(catalog):
     for artwork in lt.iterator(catalog["artworks"]):
         id_artist = artwork["ConstituentID"][1:-1].split(",")
         for number in id_artist:
-            lt.addLast(id_list, number)
+            lt.addLast(id_list, number.strip())
     nationality = {}
     for artist in lt.iterator(catalog["artists"]):
         for id_artist in lt.iterator(id_list):
-            if id_artist == artist['const_id']:
+            if id_artist == artist['const_id'].strip():
                 artist_place = artist['nationality']
                 if artist['nationality'] == "":
                     artist_place= "Nationality unknown"
@@ -176,6 +176,21 @@ def artworks_artistnationality(catalog):
                     nationality[artist_place] += 1
     sorted_dicc = sorted(nationality.items(), key=operator.itemgetter(1), reverse=True)
     return sorted_dicc 
+
+def InfoArtworksNationality(catalog, list):
+    place, num = list[0]
+    list_artist_id = lt.newList("ARRAY_LIST")
+    list_artist_name = lt.newList("ARRAY_LIST")
+    for artist in lt.iterator(catalog['artists']):
+        if artist['nationality'] == place:
+            lt.addLast(list_artist_id, artist['const_id'])
+            lt.addLast(list_artist_name, artist['name'])
+    artworks_list = lt.newList(datastructure='ARRAY_LIST')
+    for artwork in lt.iterator(catalog["artworks"]):
+        for id_artist in lt.iterator(list_artist_id):
+            if id_artist in artwork["ConstituentID"]:
+                lt.addLast(artworks_list, artwork)
+    return list_artist_name, artworks_list
 
 def artworks_department(catalog, department):
     artworks = lt.newList("ARRAY_LIST") # lista de las obras de un departamento dado
@@ -203,6 +218,8 @@ def artworks_department(catalog, department):
     artworks_price = merge.sort(artworks, compareArtworByPrice)
     artworks_date = merge.sort(artworks, cmpArtworkByDate)
     return artworks_price, artworks_date
+
+
 
 # Funciones de COMPARACIÓN
 

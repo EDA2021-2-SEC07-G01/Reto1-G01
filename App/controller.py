@@ -85,6 +85,9 @@ def artist_technique(catalog, artist_name):
 def artworks_artistnationality(catalog):
     return model.artworks_artistnationality(catalog)
 
+def InfoArtworksNationality(catalog, list):
+    return model.InfoArtworksNationality(catalog, list)
+
 def artworks_department(catalog, department):
     return model.artworks_department(catalog, department)
 

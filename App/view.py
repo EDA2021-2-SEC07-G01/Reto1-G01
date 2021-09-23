@@ -24,6 +24,7 @@ import config as cf
 import sys
 import controller
 import ipdb
+from tabulate import tabulate
 from DISClib.ADT import list as lt
 assert cf
 
@@ -45,7 +46,6 @@ def printMenu():
     print("4 - Clasificar las obras de un artista por técnica")
     print("5 - Clasificar la obra por la nacionalidad de sus creadores")
     print("6 - Transportar obras de un departamento")
-    print("7 - Proponer una nueva exposición en el museo")
     print("0 - Salir")
 
 def initCatalog(option): # the option is for selecting the datastructure
@@ -125,6 +125,36 @@ def printResultsArtists(ord_list, sample = 3):
             print("Nombre: " + artist["name"] + ", Nacimiento: " + artist["birth_date"] + ", Fallecimiento: " + artist["end_date"] + ", Nacionalidad: " + artist["nationality"] + ", Género: " + artist["gender"])
             j += 1
 
+def printResultsArtworksNationality(artworks_nationality):
+    print("The TOP 10 Countries in the MoMA are:")
+    headers = ["Nationality", "ArtWorks"]
+    table1 = []
+    contador = 0
+    for element in artworks_nationality:
+        x, y = element
+        contador += 1
+        if contador == 10:
+            break 
+        table1.append([x, y])
+    print(tabulate(table1,headers, tablefmt="grid"))
+
+def printResultsNationalityInfo(names, artworks_list, sample=3):
+    size = lt.size(artworks_list)
+    if size > sample:
+        print("Las primeras ", sample, "obras del TOP 1 nacionalidad son: ")
+        i = 1
+        j = 0
+        while i <= sample:
+            artworks = lt.getElement(artworks_list, i)
+            print("Título: "+ artworks['Title']+", Artistas: " + lt.getElement(names, i)+", Fecha: "+ artworks['Date']+", Medio: "+artworks['Medium']+ ", Dimensiones: "+artworks['Dimensions'])
+            i += 1
+        print("----------------------------------------------------------------------------------")
+        print("Las últimas ", sample, "tres obras del TOP¨1 de nacionalidad son: ")
+        while j < sample:
+            artworks = lt.getElement(artworks_list, size - j )
+            print("Título: "+ artworks['Title']+", Artistas: " + lt.getElement(names, j)+", Fecha: "+ artworks['Date']+", Medio: "+artworks['Medium']+ ", Dimensiones: "+artworks['Dimensions'])
+            j += 1
+
 catalog = None
 
 """
@@ -162,8 +192,10 @@ while True:
         print("El número total de técnicas utilizadas por " + name_artist + "son: " + str(len(techniques)))
 
     elif int(inputs[0]) == 5:
-        #ipdb.set_trace()
-        print(artworks_artistnationality(catalog))
+        list = artworks_artistnationality(catalog)
+        printResultsArtworksNationality(list)
+        names, artworks = controller.InfoArtworksNationality(catalog, list)
+        printResultsNationalityInfo(names, artworks)
         
     elif int(inputs[0]) == 6:
         department = input("Departamento del museo: ")
